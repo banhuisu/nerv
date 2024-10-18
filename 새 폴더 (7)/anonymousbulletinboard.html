@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>익명 게시판</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .post-box {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-box h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .comment-box {
+            background-color: #fafafa;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+
+        .comment-form {
+            margin-top: 20px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            height: 80px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: none;
+        }
+
+        .comment-form button {
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .comment-form button:hover {
+            background-color: #4cae4c;
+        }
+
+    </style>
+    <script>
+        // 게시글 및 댓글 불러오기
+        window.onload = function() {
+            fetch('/posts')
+            .then(response => response.json())
+            .then(data => {
+                const postContainer = document.getElementById('post-container');
+                postContainer.innerHTML = ''; // 기존 내용을 비움
+
+                data.posts.forEach(post => {
+                    const postBox = document.createElement('div');
+                    postBox.classList.add('post-box');
+                    postBox.innerHTML = `
+                        <h2>${post.title}</h2>
+                        <p>${post.content}</p>
+                        <div class="comments">
+                            ${post.comments.map(comment => `<div class="comment-box">${comment}</div>`).join('')}
+                        </div>
+                    `;
+                    postContainer.appendChild(postBox);
+                });
+            });
+        };
+
+        // 댓글 제출 함수
+        function submitComment() {
+            const commentText = document.getElementById('comment').value;
+            if (!commentText) return alert('댓글을 입력하세요.');
+
+            fetch('/add-comment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ comment: commentText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('댓글이 달렸습니다.');
+                    window.location.reload(); // 페이지 새로고침
+                } else {
+                    alert('댓글 등록에 실패했습니다.');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+    <h1>익명 게시판</h1>
+
+    <div id="post-container">
+        <!-- 서버로부터 게시글 목록 불러오기 -->
+    </div>
+
+    <div class="comment-form">
+        <textarea id="comment" placeholder="댓글을 입력하세요"></textarea>
+        <button onclick="submitComment()">댓글 달기</button>
+    </div>
+
+</body>
+</html>

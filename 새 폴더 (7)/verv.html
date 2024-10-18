@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Layout with Effects</title>
+    <style>
+        @font-face {
+            font-family: 'Galmuri11';
+            src: url('Galmuri11-Regular.otf') format('opentype');
+        }
+
+        body {
+            font-family: 'Galmuri11', sans-serif;
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            color: red;
+        }
+
+        .screen-flicker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: flicker 2s ease-in-out forwards;
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            40% {
+                opacity: 0.8;
+            }
+            60% {
+                opacity: 0.3;
+            }
+            80% {
+                opacity: 0.9;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(255, 255, 255, 0.05),
+                rgba(255, 255, 255, 0.05) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            animation: scanline-animation 1s linear infinite;
+        }
+
+        @keyframes scanline-animation {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-2px); }
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+            font-family: 'Galmuri11', sans-serif;
+            opacity: 0;
+            animation: contentFadeIn 1s ease-in-out forwards;
+            animation-delay: 2s;
+        }
+
+        @keyframes contentFadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .box {
+            background-color: #1a1a1a;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            min-height: 100px;
+        }
+
+        .box.large {
+            min-height: 250px;
+        }
+
+        .image-box {
+            text-align: center;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .image-box img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 2;
+            margin-bottom: 20px;
+        }
+
+        .rounded-rectangle {
+            width: 90%;
+            margin: 0 auto;
+            padding: 15px;
+            border: 3px solid red;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 20px;
+            color: red;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .rounded-rectangle button {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: inherit;
+            font-family: 'Galmuri11', sans-serif;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: color 0.3s, transform 0.2s;
+        }
+
+        .rounded-rectangle button:hover {
+            color: white;
+            transform: scale(1.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="screen-flicker"></div>
+
+    <div class="scanlines"></div>
+
+    <div class="main-content">
+        <div class="image-box">
+            <img src="rOGO.png" alt="이미지 설명" onclick="goToVervHP()">
+        </div>
+
+        <div class="box small first">
+            <div class="profile-box">
+                <div class="info">
+                    <span>이름</span>
+                    <span>상태</span>
+                </div>
+            </div>
+            <p>여기에 세계관 내용이 들어갑니다.</p>
+        </div>
+
+        <div class="box large">
+            <div class="lyrics">
+                여기에 캐릭터 가이드 내용이 들어갑니다.
+            </div>
+        </div>
+
+        <div class="box small">
+            파일럿 정보가 들어갑니다. >_0
+        </div>
+    </div>
+
+    <div class="rounded-rectangle">
+        <button>공지사항</button>
+        <button>세계관</button>
+        <button>파일럿</button>
+        <button>멤버</button>
+    </div>
+
+</body>
+</html>
